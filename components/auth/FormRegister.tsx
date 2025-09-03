@@ -1,8 +1,31 @@
+"use client";
 import Link from "next/link";
+import { signupCredential } from "@/lib/action";
+import { useActionState } from "react";
 
 const FormRegister = () => {
+  const initialState = {
+    values: {
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+    error: {
+      name: [],
+      email: [],
+      password: [],
+      confirmPassword: [],
+    },
+    message: undefined,
+  };
+  const [state, formAction] = useActionState(signupCredential, initialState);
+  if (typeof state.error === "object" && state.error !== null) {
+    console.log(state.error); // ✅ sekarang kebaca
+  }
+
   return (
-    <form action='' className='space-y-6'>
+    <form action={formAction} className='space-y-6'>
       <div>
         <label
           htmlFor='name'
@@ -16,9 +39,13 @@ const FormRegister = () => {
           placeholder='Your Name'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
         />
-        <div aria-live='polite' aria-atomic='true'>
-          <span className='text-sm text-red-500'>message</span>
-        </div>
+        {typeof state.error === "object" &&
+          state.error !== null &&
+          state.error.name?.map((error: string) => (
+            <div key={error} aria-live='polite' aria-atomic='true'>
+              <span className='text-sm text-red-500'>{error}</span>
+            </div>
+          ))}
       </div>
       <div>
         <label
@@ -33,9 +60,13 @@ const FormRegister = () => {
           placeholder='johndow@yahoo.com'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
         />
-        <div aria-live='polite' aria-atomic='true'>
-          <span className='text-sm text-red-500'>message</span>
-        </div>
+        {typeof state.error === "object" &&
+          state.error !== null &&
+          state.error.email?.map((error: string) => (
+            <div key={error} aria-live='polite' aria-atomic='true'>
+              <span className='text-sm text-red-500'>{error}</span>
+            </div>
+          ))}
       </div>
       <div>
         <label
@@ -50,26 +81,35 @@ const FormRegister = () => {
           placeholder='********'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
         />
-        <div aria-live='polite' aria-atomic='true'>
-          <span className='text-sm text-red-500'>message</span>
-        </div>
+
+        {typeof state.error === "object" &&
+          state.error !== null &&
+          state.error.password?.map((error: string) => (
+            <div key={error} aria-live='polite' aria-atomic='true'>
+              <span className='text-sm text-red-500'>{error}</span>
+            </div>
+          ))}
       </div>
       <div>
         <label
-          htmlFor='passwordConfirm'
+          htmlFor='confirmPassword'
           className='block mb-2 text-sm font-medium text-gray-600'
         >
           Confirm Password
         </label>
         <input
           type='password'
-          name='passwordConfirm'
+          name='confirmPassword'
           placeholder='********'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
         />
-        <div aria-live='polite' aria-atomic='true'>
-          <span className='text-sm text-red-500'>message</span>
-        </div>
+        {typeof state.error === "object" &&
+          state.error !== null &&
+          state.error.confirmPassword?.map((error: string) => (
+            <div key={error} aria-live='polite' aria-atomic='true'>
+              <span className='text-sm text-red-500'>{error}</span>
+            </div>
+          ))}
       </div>
       <button
         type='submit'
@@ -77,9 +117,10 @@ const FormRegister = () => {
       >
         Register
       </button>
-      <p>Already have an account? 
+      <p>
+        Already have an account?
         <Link href='/login' className='text-blue-400 hover:underline self-end'>
-          <span className="font-semibold">Login</span>
+          <span className='font-semibold'>Login</span>
         </Link>
       </p>
     </form>
