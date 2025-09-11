@@ -38,6 +38,7 @@ const FormRegister = () => {
           name='name'
           placeholder='Your Name'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
+          defaultValue={state?.values?.name as string | undefined}
         />
         {typeof state.error === "object" &&
           state.error !== null &&
@@ -59,6 +60,7 @@ const FormRegister = () => {
           name='email'
           placeholder='johndow@yahoo.com'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
+          defaultValue={state?.values?.email as string | undefined}
         />
         {typeof state.error === "object" &&
           state.error !== null &&
@@ -80,6 +82,7 @@ const FormRegister = () => {
           name='password'
           placeholder='********'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
+          defaultValue={state?.values?.password as string | undefined}
         />
 
         {typeof state.error === "object" &&
@@ -102,6 +105,7 @@ const FormRegister = () => {
           name='confirmPassword'
           placeholder='********'
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
+          defaultValue={state?.values?.confirmPassword as string | undefined}
         />
         {typeof state.error === "object" &&
           state.error !== null &&
