@@ -68,7 +68,7 @@ export const signupCredential = async (
     });
     // redirect to login page
   } catch (error) {
-    return { error: `${error} User already exists` };
+    throw new Error(`Failed to create user: ${error}`);
   }
   redirect("/login");
 };
