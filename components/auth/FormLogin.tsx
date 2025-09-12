@@ -1,26 +1,21 @@
 "use client";
 import Link from "next/link";
-import { signupCredential } from "@/lib/action";
+import { loginCredential } from "@/lib/action";
 import { useActionState } from "react";
 
 const FormLogin = () => {
   const initialState = {
     values: {
-      name: "",
       email: "",
       password: "",
-      confirmPassword: "",
     },
     error: {
-      name: [],
       email: [],
       password: [],
-      confirmPassword: [],
     },
     message: undefined,
   };
-  const [state, formAction] = useActionState(signupCredential, initialState);
-  
+  const [state, formAction] = useActionState(loginCredential, initialState);
 
   return (
     <form action={formAction} className='space-y-6'>
@@ -70,7 +65,7 @@ const FormLogin = () => {
             </div>
           ))}
       </div>
-      
+
       <button
         type='submit'
         className='w-full text-white bg-blue-400 font-medium rounded-lg px-5 py-2.5 cursor-pointer hover:bg-blue-500 focus:outline-none'
@@ -79,7 +74,10 @@ const FormLogin = () => {
       </button>
       <p>
         Already have an account?
-        <Link href='/register' className='text-blue-400 hover:underline self-end'>
+        <Link
+          href='/register'
+          className='text-blue-400 hover:underline self-end'
+        >
           <span className='font-semibold'>Register</span>
         </Link>
       </p>

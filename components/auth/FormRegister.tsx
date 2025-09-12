@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { signupCredential } from "@/lib/action";
 import { useActionState } from "react";
+import Button from "./Button";
 
 const FormRegister = () => {
   const initialState = {
@@ -113,12 +114,7 @@ const FormRegister = () => {
             </div>
           ))}
       </div>
-      <button
-        type='submit'
-        className='w-full text-white bg-blue-400 font-medium rounded-lg px-5 py-2.5 cursor-pointer hover:bg-blue-500 focus:outline-none'
-      >
-        Register
-      </button>
+      <Button title="Register" />
       <p>
         Already have an account?
         <Link href='/login' className='text-blue-400 hover:underline self-end'>

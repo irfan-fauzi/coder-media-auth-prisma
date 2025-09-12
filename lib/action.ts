@@ -1,9 +1,10 @@
 "use server";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
-import { RegisterSchema } from "@/lib/zod";
+import { LoginSchema, RegisterSchema } from "@/lib/zod";
 import { hashSync } from "bcrypt-ts";
 
+// Register
 export const signupCredential = async (
   prevState: unknown,
   formData: FormData
@@ -38,7 +39,7 @@ export const signupCredential = async (
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
-  if (existingUser) { 
+  if (existingUser) {
     return {
       values: {
         name: formData.get("name") || "",
@@ -51,10 +52,9 @@ export const signupCredential = async (
         email: ["Email already exists"],
         password: [],
         confirmPassword: [],
-      }
-    }
+      },
+    };
   }
-    
 
   const hashedPassword = hashSync(password, 10);
 
@@ -73,14 +73,59 @@ export const signupCredential = async (
   redirect("/login");
 };
 
-/*
-.safeParse()
+// Login
 
-Sebaliknya, metode .safeParse() akan mengembalikan (return) sebuah objek hasil (result object) yang menunjukkan apakah validasi berhasil atau gagal. Metode ini tidak akan melemparkan kesalahan, sehingga Anda tidak perlu menggunakan blok try...catch. Objek hasil yang dikembalikan memiliki dua properti utama: success dan data atau error.
-
---------------------------------------------------------------------
-.parse()
-
-Metode .parse() akan melemparkan (throw) sebuah kesalahan (error) jika validasi gagal. Hal ini berarti, jika data yang Anda berikan tidak sesuai dengan skema Zod, program Anda akan berhenti dan Anda harus menggunakan blok try...catch untuk menangkap kesalahan tersebut.
-
-*/
+export const loginCredential = async (
+  prevState: unknown,
+  formData: FormData
+) => {
+  const validatedField = LoginSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+  if (!validatedField.success) {
+    const filedErrors = validatedField.error.flatten().fieldErrors;
+    return {
+      values: {
+        email: formData.get("email") || "",
+        password: formData.get("password") || "",
+      },
+      error: {
+        email: filedErrors.email || [],
+        password: filedErrors.password || [],
+      },
+    };
+  }
+  const { email, password } = validatedField.data;
+  // check if email exists
+  const existingUser = await prisma.user.findUnique({
+    where: { email },
+  });
+  if (!existingUser) {
+    return {
+      values: {
+        email,
+        password: "",
+      },
+      error: {
+        email: ["Email does not exist"],
+        password: [],
+      },
+    };
+  }
+  // check if password is correct
+  const isPasswordCorrect = existingUser.password === password;
+  if (!isPasswordCorrect) {
+    return {
+      values: {
+        email,
+        password: "",
+      },
+      error: {
+        email: [],
+        password: ["Incorrect password"],
+      },
+    };
+  }
+  redirect("/dashboard");
+};
