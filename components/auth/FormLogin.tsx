@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { loginCredential } from "@/lib/action";
 import { useActionState } from "react";
+import Button from "./Button";
 
 const FormLogin = () => {
   const initialState = {
@@ -34,7 +35,7 @@ const FormLogin = () => {
           defaultValue={state?.values?.email as string | undefined}
         />
 
-        {typeof state.error === "object" &&
+        {typeof state?.error === "object" &&
           state.error !== null &&
           state.error.email?.map((error: string) => (
             <div key={error} aria-live='polite' aria-atomic='true'>
@@ -57,7 +58,7 @@ const FormLogin = () => {
           defaultValue={state?.values?.password as string | undefined}
         />
 
-        {typeof state.error === "object" &&
+        {typeof state?.error === "object" &&
           state.error !== null &&
           state.error.password?.map((error: string) => (
             <div key={error} aria-live='polite' aria-atomic='true'>
@@ -66,12 +67,7 @@ const FormLogin = () => {
           ))}
       </div>
 
-      <button
-        type='submit'
-        className='w-full text-white bg-blue-400 font-medium rounded-lg px-5 py-2.5 cursor-pointer hover:bg-blue-500 focus:outline-none'
-      >
-        Login
-      </button>
+      <Button title="Login" />
       <p>
         Already have an account?
         <Link

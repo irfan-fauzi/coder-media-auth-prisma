@@ -1,8 +1,10 @@
 "use server";
+import { AuthError } from "next-auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { LoginSchema, RegisterSchema } from "@/lib/zod";
 import { hashSync } from "bcrypt-ts";
+import { signIn } from "@/auth";
 
 // Register
 export const signupCredential = async (
@@ -73,8 +75,7 @@ export const signupCredential = async (
   redirect("/login");
 };
 
-// Login
-
+// Login------------------------------------------------------
 export const loginCredential = async (
   prevState: unknown,
   formData: FormData
@@ -97,35 +98,17 @@ export const loginCredential = async (
     };
   }
   const { email, password } = validatedField.data;
-  // check if email exists
-  const existingUser = await prisma.user.findUnique({
-    where: { email },
-  });
-  if (!existingUser) {
-    return {
-      values: {
-        email,
-        password: "",
-      },
-      error: {
-        email: ["Email does not exist"],
-        password: [],
-      },
-    };
+  try {
+    await signIn('credentials', {email, password, redirectTo: "/dashboard"})
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return {message: "Invalid Credentials"}
+        default:
+          return {message: "Unknown error"}
+      }
+    }
+    throw error
   }
-  // check if password is correct
-  const isPasswordCorrect = existingUser.password === password;
-  if (!isPasswordCorrect) {
-    return {
-      values: {
-        email,
-        password: "",
-      },
-      error: {
-        email: [],
-        password: ["Incorrect password"],
-      },
-    };
-  }
-  redirect("/dashboard");
 };
