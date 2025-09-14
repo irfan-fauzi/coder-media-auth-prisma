@@ -1,9 +1,15 @@
-import React from 'react'
+import { auth } from "@/auth";
 
-const DashboardPage = () => {
+const DashboardPage = async () => {
+  const session = await auth();
   return (
-    <div>DashboardPage</div>
-  )
-}
+    <div className='max-w-screen-xl mx-auto p-4 border'>
+      <h1 className='text-2xl'>Home Page</h1>
+      <h2 className="text-xl">
+        Welcome back <span>{session?.user?.name}</span>
+      </h2>
+    </div>
+  );
+};
 
-export default DashboardPage
+export default DashboardPage;
