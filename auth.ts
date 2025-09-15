@@ -28,8 +28,25 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
         const isPasswordValid = compareSync(password, user.password);
         if (!isPasswordValid) return null; // ini akan memicu error credential login
-        return user
+        return user;
       },
     }),
   ],
+  callbacks: {
+    authorized({ auth, request: { nextUrl } }) {
+      const isAuthorized = !!auth?.user;
+      const ProtectedRoutes = ["/dashboard", "/user", "/product"];
+      // jika user belum login dan mengakses halaman protected route
+      if (!isAuthorized && ProtectedRoutes.includes(nextUrl.pathname)) {
+        // maka akan diarahkan ke halaman login
+        return Response.redirect(new URL("/login", nextUrl));
+      }
+      // jika user sudah login dan mengakses halaman login
+      if (isAuthorized && nextUrl.pathname.startsWith("/login")) {
+        // maka akan diarahkan ke halaman dashboard
+        return Response.redirect(new URL("/dashboard", nextUrl));
+      }
+      return true;
+    },
+  },
 });
