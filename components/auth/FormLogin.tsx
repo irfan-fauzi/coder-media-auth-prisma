@@ -17,7 +17,7 @@ const FormLogin = () => {
     message: undefined,
   };
   const [state, formAction] = useActionState(loginCredential, initialState);
-  console.log(state);
+ 
   return (
     <form action={formAction} className='space-y-6'>
       <div>

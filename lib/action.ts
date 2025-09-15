@@ -99,16 +99,16 @@ export const loginCredential = async (
   }
   const { email, password } = validatedField.data;
   try {
-    await signIn('credentials', {email, password, redirectTo: "/dashboard"})
+    await signIn("credentials", { email, password, redirectTo: "/dashboard" });
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
-          return {message: "Invalid Credentials"}
+          return { message: "Invalid Credentials" }; // ini akan menampilkan error di form login
         default:
-          return {message: "Unknown error"}
+          return { message: "Unknown error" };
       }
     }
-    throw error
+    throw error;
   }
 };
