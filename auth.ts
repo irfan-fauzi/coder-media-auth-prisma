@@ -8,6 +8,9 @@ import { compareSync } from "bcrypt-ts";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: { strategy: "jwt" },
+  pages: {
+    signIn: "/login",
+  },
   providers: [
     Credentials({
       credentials: {
@@ -47,6 +50,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         return Response.redirect(new URL("/dashboard", nextUrl));
       }
       return true;
+    },
+    jwt({ token, user }) {
+      if (user) token.role = user.role;
+      return token;
+    },
+    session({ session, token }) {
+      session.user.id = token.sub;
+      session.user.role = token.role;
+      return session;
     },
   },
 });

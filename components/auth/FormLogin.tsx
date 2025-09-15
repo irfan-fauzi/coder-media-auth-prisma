@@ -17,7 +17,7 @@ const FormLogin = () => {
     message: undefined,
   };
   const [state, formAction] = useActionState(loginCredential, initialState);
-
+  console.log(state);
   return (
     <form action={formAction} className='space-y-6'>
       <div>
@@ -34,14 +34,6 @@ const FormLogin = () => {
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
           defaultValue={state?.values?.email as string | undefined}
         />
-
-        {typeof state?.error === "object" &&
-          state.error !== null &&
-          state.error.email?.map((error: string) => (
-            <div key={error} aria-live='polite' aria-atomic='true'>
-              <span className='text-sm text-red-500'>{error}</span>
-            </div>
-          ))}
       </div>
       <div>
         <label
@@ -57,17 +49,12 @@ const FormLogin = () => {
           className='bg-gray-50 border border-gray-300 text-gray-600 rounded-lg w-full p-2.5'
           defaultValue={state?.values?.password as string | undefined}
         />
-
-        {typeof state?.error === "object" &&
-          state.error !== null &&
-          state.error.password?.map((error: string) => (
-            <div key={error} aria-live='polite' aria-atomic='true'>
-              <span className='text-sm text-red-500'>{error}</span>
-            </div>
-          ))}
+        <div aria-live='polite' aria-atomic='true'>
+          <span className='text-sm text-red-500'>{state?.message}</span>
+        </div>
       </div>
 
-      <Button title="Login" />
+      <Button title='Login' />
       <p>
         Already have an account?
         <Link
