@@ -18,14 +18,14 @@ const Navbar = async () => {
                 <Link href='/'>Home</Link>
               </li>
               <li>
-                <Link href='/product'>Product</Link>
+                <Link href='/products'>Product</Link>
               </li>
               <li>
                 <Link href='/dashboard'>Dashboard</Link>
               </li>
               {session.user.role === "admin" && (
                 <li>
-                  <Link href='/user'>Users</Link>
+                  <Link href='/users'>Users</Link>
                 </li>
               )}
             </ul>
